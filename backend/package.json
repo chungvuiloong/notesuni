@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "remove": "rm -rf ../frontend/dist && rm -rf ../backend/dist",
     "build:ui": "npm run remove && cd ../frontend/ && npm run build && cp -r dist ../backend",
-    "deploy:full": "npm run build:ui && git add . && git push"
+    "deploy": "npm run build:ui && git add . && git push"
   },
   "author": "",
   "license": "ISC",
