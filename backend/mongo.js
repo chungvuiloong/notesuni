@@ -8,7 +8,7 @@ if (process.argv.length<3) {
 const password = process.argv[2]
 
 const url =
-  `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/noteApp?retryWrites=true&w=majority`
+  `mongodb+srv://fullstack:${password}@fullstack.uibsh.mongodb.net/noteApp?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery',false)
 
@@ -26,7 +26,15 @@ const note = new Note({
   important: true,
 })
 
+// This creates a database in mongoDB
 note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})
+    console.log('note saved!')
+    mongoose.connection.close()
+  })
+
+// Note.find({}).then(result => {
+//     result.forEach(note => {
+//       console.log(note)
+//     })
+//     mongoose.connection.close()
+// })
