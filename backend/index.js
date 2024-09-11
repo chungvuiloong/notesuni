@@ -2,8 +2,8 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
-
 const mongoose = require('mongoose')
+
 const password = process.env.MONGODB_PASSWORD
 const cluster = process.env.MONGODB_CLUSTER
 const db = process.env.MONGODB_DB
@@ -18,6 +18,14 @@ const noteSchema = new mongoose.Schema({
 })
 
 const Note = mongoose.model('Note', noteSchema)
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+    }
+})
 
 
 const requestLogger = (request, response, next) => {
@@ -101,21 +109,22 @@ const generateId = () => {
 app.post('/api/notes', (request, response) => {
   const body = request.body
 
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
+  app.post('/api/notes', (request, response) => {
+    const body = request.body
+  
+    if (body.content === undefined) {
+      return response.status(400).json({ error: 'content missing' })
+    }
+  
+    const note = new Note({
+      content: body.content,
+      important: body.important || false,
     })
-  }
-
-  const note = {
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-    id: generateId(),
-  }
-
-  notes = notes.concat(note)
-  response.json(note)
+  
+    note.save().then(savedNote => {
+      response.json(savedNote)
+    })
+  })
 })
 
 
